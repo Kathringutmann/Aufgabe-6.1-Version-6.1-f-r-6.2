@@ -1,6 +1,7 @@
 import json
 from datetime import date
 import requests
+from config import PERSON_API_URL
 
 class Person:
     def __init__(self, first_name, last_name, sex, birth_date):
@@ -36,7 +37,7 @@ class Person:
         Legt eine neue Person auf dem Webserver an, basierend auf dem aktuellen Person-Objekt.
         Nur der Vorname wird verwendet.
         """
-        url = "https://example.com/api/persons"
+        url = PERSON_API_URL
         data = {"first_name": self.first_name}
         response = requests.post(url, json=data)
         if response.status_code == 201:
@@ -51,12 +52,23 @@ class Subject(Person):
         self.max_hr = max_hr
         self.email = email
 
+    def to_dict(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "sex": self.sex,
+            "_birth_date": self._birth_date.strftime("%Y-%m-%d"),
+            "phone_number": self.phone_number,
+            "max_hr": self.max_hr,
+            "email": self.email
+        }
+
     def update_email(self):
         """
         Aktualisiert die E-Mail-Adresse einer Person auf dem Server.
         Setzt voraus, dass zuvor ein Subject mit dem gleichen Vornamen angelegt wurde.
         """
-        url = f"https://example.com/api/persons/{self.first_name}"
+        url = f"{PERSON_API_URL}/{self.first_name}"
         data = {"email": self.email}
         response = requests.put(url, json=data)
         if response.status_code == 200:
@@ -68,13 +80,21 @@ class Supervisor(Person):
     def __init__(self, first_name, last_name, sex, birth_date):
         super().__init__(first_name, last_name, sex, birth_date)
 
+    def to_dict(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "sex": self.sex,
+            "_birth_date": self._birth_date.strftime("%Y-%m-%d")
+        }
+
 class Experiment:
     def __init__(self, experiment_name, experiment_number, date, supervisor, subject):
         self.experiment_name = experiment_name
         self.experiment_number = experiment_number
         self.date = date
-        self.supervisor = supervisor
-        self.subject = subject
+        self.supervisor = supervisor.to_dict()
+        self.subject = subject.to_dict()
         self.__dict__ = vars(self)
 
     def to_dict(self):
@@ -82,19 +102,4 @@ class Experiment:
 
     def save(self, filename):
         with open(filename, 'w') as file:
-            json.dump(self.__dict__, file)
-
-# Erstellen Sie ein Objekt der Experiment-Klasse
-supervisor = Supervisor("Supervisor", "1", "male", date(1980, 1, 1))
-subject = Subject("John", "Doe", "male", date(1990, 1, 1), "123456789", 180, "john.doe@example.com")
-experiment = Experiment("Experiment 1", 1, "2023-04-21", supervisor, subject)
-
-# Rufen Sie die to_dict()-Methode auf dem Objekt auf
-print(experiment.to_dict())
-
-# Legen Sie eine neue Person auf dem Webserver an
-person = Person("Jane", "Doe", "female", date(1985, 5, 15))
-person.put()
-
-# Aktualisieren Sie die E-Mail-Adresse einer Person auf dem Webserver
-subject.update_email()
+            json.dump(self.to_dict(), file)

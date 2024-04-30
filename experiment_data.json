@@ -1,0 +1,1 @@
+{"experiment_name": "Experiment 1", "experiment_number": 1, "date": "2023-04-21", "supervisor": {"first_name": "Supervisor", "last_name": "1", "sex": "male", "_birth_date": "1980-01-01"}, "subject": {"first_name": "John", "last_name": "Doe", "sex": "male", "_birth_date": "1990-01-01", "phone_number": "123456789", "max_hr": 180, "email": "john.doe@example.com"}}
