@@ -32,5 +32,4 @@ In der Main-Funktion werden nun Subject- und Supervisor-Objekte erstellt und in 
 Die Änderungen wurden vorgenommen, um den Code besser zu strukturieren und die Verantwortlichkeiten der einzelnen Klassen klarer zu trennen.
 ## Basisklasse Person: 
 Durch die Einführung der Basisklasse Person können wir gemeinsame Attribute und Methoden in einer zentralen Stelle definieren. Dies erhöht die Wiederverwendbarkeit und Wartbarkeit des Codes.
-## Subklassen Subject und Supervisor: 
-Die Subklassen Subject und Supervisor erben von der Basisklasse Person und enthalten nur die für sie spezifischen Attribute. Dadurch wird der Code übersichtlicher und es wird deutlich, welche Eigenschaften für Versuchsteilnehmer und Supervisoren relevant sind.
+
