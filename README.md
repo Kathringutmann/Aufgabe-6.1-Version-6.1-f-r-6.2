@@ -1,3 +1,5 @@
+virtuelle Umgebung aktivieren: -> über Suchleiste venv ->unten rechts (blau) auf Zahlen -> .venv\Scripts\Activate -> danach pip instal ...
+
 # Alte Version
 In der alten Version hatten wir folgende Klassen:
 ## Person-Klasse:
@@ -32,5 +34,3 @@ Die Änderungen wurden vorgenommen, um den Code besser zu strukturieren und die 
 Durch die Einführung der Basisklasse Person können wir gemeinsame Attribute und Methoden in einer zentralen Stelle definieren. Dies erhöht die Wiederverwendbarkeit und Wartbarkeit des Codes.
 ## Subklassen Subject und Supervisor: 
 Die Subklassen Subject und Supervisor erben von der Basisklasse Person und enthalten nur die für sie spezifischen Attribute. Dadurch wird der Code übersichtlicher und es wird deutlich, welche Eigenschaften für Versuchsteilnehmer und Supervisoren relevant sind.
-## Verbesserung der Altersberechnung:
-In der neuen Version wird das Geburtsdatum als privates Attribut _birth_date gespeichert. Über eine Eigenschaft age wird das Alter dann berechnet. Dies ist genauer als die vorherige Berechnung über das Alter.
