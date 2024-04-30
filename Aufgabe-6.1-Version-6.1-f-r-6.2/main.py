@@ -1,29 +1,77 @@
+#!/usr/bin/env python
+# encoding: utf-8
 import json
-from datetime import date
-from my_classes import Person, Subject, Supervisor, Experiment
+from flask import Flask, request, jsonify
 
-def main():
-    # Erstellen Sie ein Supervisor-Objekt
-    supervisor = Supervisor(first_name="Bob", last_name="Smith", sex="male", birth_date=date(1970, 1, 1))
+app = Flask(__name__)
 
-    # Erstellen Sie ein Subject-Objekt
-    subject = Subject(first_name="John", last_name="Doe", sex="male", birth_date=date(1990, 1, 1), phone_number=123456789, max_hr=180)
+# GET all persons
+@app.route('/person/', methods=['GET'])
+def get_persons():
+    with open('data.json', 'r') as f:
+        data = f.read()
+        return data
 
-    # Erstellen Sie ein Experiment-Objekt
-    experiment = Experiment(experiment_name="Leistung", experiment_number=2, date=date(2023, 12, 24), supervisor=supervisor, subject=subject)
 
-    filename = "experiment.json"
-
-    with open(filename, 'w') as outfile:
-        json.dump(experiment.to_dict(), outfile, default=json_default)
-
-    print(f"Die Experiment- und Versuchsteilnehmerdaten wurden in der Datei '{filename}' gespeichert.")
-
-def json_default(obj):
-    if isinstance(obj, date):
-        return obj.isoformat()
+# POST (create a new person)
+@app.route('/person/', methods=['POST'])
+def create_person():
+    record = json.loads(request.data)
+    with open('data.json', 'r') as f:
+        data = f.read()
+    if not data:
+        records = [record]
     else:
-        return obj.__dict__
+        records = json.loads(data)
+        records.append(record)
+    with open('data.json', 'w') as f:
+        f.write(json.dumps(records, indent=2))
+    return jsonify(record)
 
-if __name__ == "__main__":
-    main()
+# GET a person by name
+@app.route('/person/<name>', methods=['GET'])
+def get_person(name):
+
+    with open('data.json', 'r') as f:
+        data = f.read()
+        records = json.loads(data)
+        for record in records:
+            if record['name'] == name:
+                return jsonify(record)
+        return jsonify({'error': 'data not found'})
+    
+# PUT (update a person)
+@app.route('/person/<name>', methods=['PUT'])
+
+def update_person(name):
+    record = json.loads(request.data)
+    with open('data.json', 'r') as f:
+        data = f.read()
+        records = json.loads(data)
+        for i in range(len(records)):
+            if records[i]['name'] == name:
+                records[i] = record
+                with open('data.json', 'w') as f:
+                    f.write(json.dumps(records, indent=2))
+                return jsonify(record)
+        return jsonify({'error': 'data not found'})
+
+# DELETE a person
+@app.route('/person/<name>', methods=['DELETE'])
+
+def delete_person(name):
+
+    with open('data.json', 'r') as f:
+        data = f.read()
+        records = json.loads(data)
+        for i in range(len(records)):
+            if records[i]['name'] == name:
+                record = records.pop(i)
+                with open('data.json', 'w') as f:
+                    f.write(json.dumps(records, indent=2))
+                record["deleted"] = "True"
+                return jsonify(record)
+        return jsonify({'error': 'data not found'})
+
+
+app.run(debug=True)
