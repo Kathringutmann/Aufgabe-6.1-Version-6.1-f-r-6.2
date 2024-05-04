@@ -36,7 +36,7 @@ class Person:
         Legt eine neue Person auf dem Webserver an, basierend auf dem aktuellen Person-Objekt.
         Nur der Vorname wird verwendet.
         """
-        url = "https://example.com/api/persons"
+        url = "https://www.meinedomain.de/api/persons"
         data = {"first_name": self.first_name}
         response = requests.post(url, json=data)
         if response.status_code == 201:
@@ -56,7 +56,7 @@ class Subject(Person):
         Aktualisiert die E-Mail-Adresse einer Person auf dem Server.
         Setzt voraus, dass zuvor ein Subject mit dem gleichen Vornamen angelegt wurde.
         """
-        url = f"https://example.com/api/persons/{self.first_name}"
+        url = f"https://www.meinedomain.de/api/persons/{self.first_name}"
         data = {"email": self.email}
         response = requests.put(url, json=data)
         if response.status_code == 200:
